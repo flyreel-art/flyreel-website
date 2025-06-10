@@ -15,7 +15,7 @@ export default function ImprintPage() {
         </section>
         <section className="mb-6">
           <h2 className="font-semibold mb-1">Disclaimer</h2>
-          <p>The contents of our pages have been created with the utmost care. However, we cannot guarantee the contents' accuracy, completeness, or topicality. As a service provider, we are responsible for our own content on these pages according to general laws. However, we are not obligated to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity. Obligations to remove or block the use of information under general laws remain unaffected. Any liability in this respect is, however, only possible from the time of knowledge of a specific infringement. Upon becoming aware of such violations, we will remove this content immediately.</p>
+          <p>The contents of our pages have been created with the utmost care. However, we cannot guarantee the contents&apos; accuracy, completeness, or topicality. As a service provider, we are responsible for our own content on these pages according to general laws. However, we are not obligated to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity. Obligations to remove or block the use of information under general laws remain unaffected. Any liability in this respect is, however, only possible from the time of knowledge of a specific infringement. Upon becoming aware of such violations, we will remove this content immediately.</p>
         </section>
         <section className="mb-6">
           <h2 className="font-semibold mb-1">Privacy Policy</h2>
