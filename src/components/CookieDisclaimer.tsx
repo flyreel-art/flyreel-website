@@ -2,6 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 
+declare global {
+  interface Window {
+    va?: (...args: any[]) => void;
+  }
+}
+
 export default function CookieDisclaimer() {
   const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -18,9 +24,40 @@ export default function CookieDisclaimer() {
     }
   }, []);
 
+  const initializeAnalytics = () => {
+    // Initialize Vercel Analytics when cookies are accepted
+    const script = document.createElement('script');
+    script.src = 'https://va.vercel-scripts.com/va.js';
+    script.defer = true;
+    script.onload = () => {
+      // Track initial page view
+      if (window.va) {
+        window.va('track', 'pageview');
+      }
+    };
+    
+    // Only add script if it doesn't already exist
+    if (!document.querySelector('script[src="https://va.vercel-scripts.com/va.js"]')) {
+      document.head.appendChild(script);
+    }
+  };
+
+  const removeAnalytics = () => {
+    // Remove analytics script if it exists
+    const existingScript = document.querySelector('script[src="https://va.vercel-scripts.com/va.js"]');
+    if (existingScript) {
+      existingScript.remove();
+    }
+    // Clear analytics function
+    if (window.va) {
+      delete window.va;
+    }
+  };
+
   const handleAccept = () => {
     localStorage.setItem('cookieConsent', 'accepted');
     localStorage.setItem('cookieConsentDate', new Date().toISOString());
+    initializeAnalytics();
     closeDisclaimer();
   };
 
@@ -29,6 +66,7 @@ export default function CookieDisclaimer() {
     localStorage.setItem('cookieConsentDate', new Date().toISOString());
     // Clear any existing cookies (except essential ones)
     clearNonEssentialCookies();
+    removeAnalytics();
     closeDisclaimer();
   };
 
