@@ -1,7 +1,7 @@
 import "./globals.css";
 import VercelAnalytics from "../components/VercelAnalytics";
 import AnalyticsDebug from "../components/AnalyticsDebug";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import VercelSpeedInsights from "../components/VercelSpeedInsights";
 
 export default function RootLayout({
   children,
@@ -22,7 +22,7 @@ export default function RootLayout({
         {children}
         <VercelAnalytics />
         <AnalyticsDebug />
-        <SpeedInsights />
+        <VercelSpeedInsights />
       </body>
     </html>
   );
