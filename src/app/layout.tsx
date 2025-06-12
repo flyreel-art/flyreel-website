@@ -1,5 +1,5 @@
 import "./globals.css";
-import Analytics from "../components/Analytics";
+import VercelAnalytics from "../components/VercelAnalytics";
 import AnalyticsDebug from "../components/AnalyticsDebug";
 
 export default function RootLayout({
@@ -19,7 +19,7 @@ export default function RootLayout({
       </head>
       <body>
         {children}
-        <Analytics />
+        <VercelAnalytics />
         <AnalyticsDebug />
       </body>
     </html>
