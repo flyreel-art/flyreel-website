@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import CookieDisclaimer from "../components/CookieDisclaimer";
 
 const MENU = [
   { label: "About", id: "about" },
@@ -265,8 +266,14 @@ export default function Home() {
       {/* Footer */}
       <footer className="w-full flex items-center justify-between px-6 py-2 text-xs text-gray-300 bg-[#23272f]/80 border-t border-gray-800 relative backdrop-blur-md shadow-lg">
         <span>© 2025 Flyreel</span>
-        <a href="/imprint" className="absolute right-4 bottom-2 text-gray-400 hover:text-white text-xs px-2 py-1 rounded transition-colors duration-200" style={{opacity:0.7}}>Imprint</a>
+        <div className="absolute right-4 bottom-2 flex gap-4">
+          <a href="/datenschutz" className="text-gray-400 hover:text-white text-xs px-2 py-1 rounded transition-colors duration-200" style={{opacity:0.7}}>Privacy Policy</a>
+          <a href="/imprint" className="text-gray-400 hover:text-white text-xs px-2 py-1 rounded transition-colors duration-200" style={{opacity:0.7}}>Imprint</a>
+        </div>
       </footer>
+      
+      {/* Cookie Disclaimer */}
+      <CookieDisclaimer />
       {/* Gradient Animation Keyframes */}
       <style jsx global>{`
         @keyframes gradient {
