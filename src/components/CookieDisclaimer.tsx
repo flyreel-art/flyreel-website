@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 declare global {
   interface Window {
     va?: (...args: any[]) => void;
+    vaq?: any[];
   }
 }
 
@@ -15,58 +16,103 @@ export default function CookieDisclaimer() {
   useEffect(() => {
     // Check if user has already made a choice
     const cookieConsent = localStorage.getItem('cookieConsent');
+    console.log('CookieDisclaimer: Current consent status:', cookieConsent);
+    
     if (!cookieConsent) {
       // Show disclaimer after a short delay for better UX
       const timer = setTimeout(() => {
         setIsVisible(true);
+        console.log('CookieDisclaimer: Showing cookie disclaimer');
       }, 1000);
       return () => clearTimeout(timer);
     }
   }, []);
 
   const initializeAnalytics = () => {
+    console.log('CookieDisclaimer: Initializing analytics after consent...');
+    
+    // Create analytics queue if it doesn't exist
+    if (!window.vaq) {
+      window.vaq = [];
+    }
+    
     // Initialize Vercel Analytics when cookies are accepted
-    const script = document.createElement('script');
-    script.src = 'https://va.vercel-scripts.com/va.js';
-    script.defer = true;
-    script.onload = () => {
-      // Track initial page view
+    const existingScript = document.querySelector('script[src="https://va.vercel-scripts.com/va.js"]');
+    
+    if (!existingScript) {
+      console.log('CookieDisclaimer: Loading Vercel Analytics script...');
+      
+      const script = document.createElement('script');
+      script.src = 'https://va.vercel-scripts.com/va.js';
+      script.defer = true;
+      script.async = true;
+      
+      script.onload = () => {
+        console.log('CookieDisclaimer: Analytics script loaded, tracking pageview...');
+        // Track initial page view after consent
+        if (window.va) {
+          window.va('track', 'pageview');
+        } else {
+          // Queue the pageview if va isn't ready yet
+          window.vaq?.push(['track', 'pageview']);
+        }
+      };
+      
+      script.onerror = () => {
+        console.error('CookieDisclaimer: Failed to load analytics script');
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      console.log('CookieDisclaimer: Analytics script already exists, tracking pageview...');
+      // Script already exists, track pageview immediately
       if (window.va) {
         window.va('track', 'pageview');
+      } else {
+        window.vaq?.push(['track', 'pageview']);
       }
-    };
-    
-    // Only add script if it doesn't already exist
-    if (!document.querySelector('script[src="https://va.vercel-scripts.com/va.js"]')) {
-      document.head.appendChild(script);
     }
   };
 
   const removeAnalytics = () => {
+    console.log('CookieDisclaimer: Removing analytics...');
+    
     // Remove analytics script if it exists
     const existingScript = document.querySelector('script[src="https://va.vercel-scripts.com/va.js"]');
     if (existingScript) {
       existingScript.remove();
+      console.log('CookieDisclaimer: Analytics script removed');
     }
-    // Clear analytics function
+    
+    // Clear analytics function and queue
     if (window.va) {
       delete window.va;
+    }
+    if (window.vaq) {
+      delete window.vaq;
     }
   };
 
   const handleAccept = () => {
+    console.log('CookieDisclaimer: User accepted cookies');
     localStorage.setItem('cookieConsent', 'accepted');
     localStorage.setItem('cookieConsentDate', new Date().toISOString());
+    
+    // Initialize analytics immediately
     initializeAnalytics();
+    
     closeDisclaimer();
   };
 
   const handleDecline = () => {
+    console.log('CookieDisclaimer: User declined cookies');
     localStorage.setItem('cookieConsent', 'declined');
     localStorage.setItem('cookieConsentDate', new Date().toISOString());
+    
     // Clear any existing cookies (except essential ones)
     clearNonEssentialCookies();
     removeAnalytics();
+    
     closeDisclaimer();
   };
 
